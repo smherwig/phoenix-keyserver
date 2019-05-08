@@ -877,6 +877,9 @@ nsm_server_socket_create(struct nsm_server *server, const char *url,
     }
 
     rho_sock_setnonblocking(sock);
+    
+    if (rho_str_startswith(url, "tcp:") || rho_str_startswith(url, "tcp4:"))
+        rhoL_setsockopt_disable_nagle(sock->fd);
     server->srv_sock = sock;
 }
 

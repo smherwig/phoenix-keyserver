@@ -16,6 +16,7 @@
 #include <rho/rho_log.h>
 #include <rho/rho_mem.h>
 #include <rho/rho_rand.h>
+#include <rho/rho_sock.h>
 #include <rho/rho_str.h>
 #include <rho/rho_tree.h>
 #include <rho/rho_url.h>
@@ -360,7 +361,11 @@ nsm_client_create(const char *url)
     RHO_TRACE_ENTER("url=\"%s\"", url);
 
     sock = rho_sock_from_url(url);
+    
     rho_sock_connect_url(sock, url);
+
+    if (rho_str_startswith(url, "tcp:") || rho_str_startswith(url, "tcp4:"))
+        rhoL_setsockopt_disable_nagle(sock->fd);
 
     client = rhoL_zalloc(sizeof(*client));
     client->cli_agent = rpc_agent_create(sock, NULL);
