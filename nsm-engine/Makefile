@@ -23,7 +23,7 @@ TO_LIB= nsm-engine.so
 
 
 #CFLAGS = -fPIC -Wall -Werror -I $(HOME)/include -I $(PWD)/../common \
-#		 -DNSM_DO_BENCH
+		 -DNSM_DO_BENCH
 CFLAGS = -fPIC -Wall -Werror -I $(HOME)/include -I $(PWD)/../common
 STATIC_PIC_LIBS=$(addprefix $(HOME)/lib/,librpc-pic.a librho-pic.a)
 

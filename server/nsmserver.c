@@ -907,7 +907,12 @@ nsm_server_cb(struct rho_event *event, int what, struct rho_event_loop *loop)
         rho_errno_die(errno, "accept failed");
     /* TODO: check that addrlen == sizeof struct soackaddr_un */
 
+    /* FIXME: the rho_sock_unix_from_fd is a misnomer: it works for any
+     * stream-based socket
+     */
     csock = rho_sock_unix_from_fd(cfd);
+    /* FIXME: should only disable nagle if fd is a TCP socket */
+    rhoL_setsockopt_disable_nagle(csock->fd);
     rho_sock_setnonblocking(csock);
     if (server->srv_sc != NULL)
         rho_ssl_wrap(csock, server->srv_sc);
