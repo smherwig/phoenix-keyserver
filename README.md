@@ -49,8 +49,6 @@ The keyserver can then be packaged with the commands:
 ```
 cd ~/src/makemanifest
 ./make_sgx.py -g ~/src/phoenix  -k enclave-key.pem -p ~/src/keyserver/deploy/manifest.conf -t $PWD -v -o nsmserver
-cd nsmserver
-cp manifest.sgx nsmserver.manifest.sgx
 ```
 
 To run the keyserver, where the private keys are kept in /src
@@ -132,8 +130,6 @@ EXEC file:/home/smherwig/src/keyserver/server/nsmserver
 
 MOUNT file:/home/smherwig/src/keyserver/server /srv chroot rw
 MOUNT file:/home/smherwig/src/keyserver/deploy/etc /etc chroot rw
-
-BIND 127.0.0.1 9000
 
 ENCLAVE_SIZE 128 
 
