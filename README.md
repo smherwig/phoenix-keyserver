@@ -6,8 +6,8 @@ microkernel.  The keyserver is also called *nsmserver* (Network Security Module
 server), and has a companion OpenSSL engine called *nsm-engine*.
 
 
-Building and Installing
-=======================
+<a name="building"/> Building and Installing
+============================================
 
 The keyserver depends on [librho](https://github.com/smherwig/librho) and
 [librpc](https://github.com/smherwig/phoenix-librpc).
@@ -57,8 +57,8 @@ To run the keyserver, where the private keys are kept in /src
 ./nsmserver.manifest.sgx -r /srv tcp://127.0.0.1:9000
 ```
 
-Micro-benchmarks
-================
+<a name="micro-benchmarks"/> Micro-benchmarks
+=============================================
 
 To evaluate the keyserver's performance, we use the script
 `~/src/keyserver/bench/benchmark.py` to mesaure the number of RSA-2048
