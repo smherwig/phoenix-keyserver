@@ -142,7 +142,7 @@ THREADS 1
 
 changing the paths as appropriate.
 
-Follow the stesp to [package](#packaging) the nsmserver.
+Follow the steps to [package](#packaging) the nsmserver.
 
 In one terminal, run the nsmserver on Graphene:
 
@@ -163,5 +163,5 @@ cd ~/src/keyserver/bench
 Ensure that `~/src/keyserver/deploy/manifest.conf` has the line `THREADS 1
 exitless`, rather than `THREADS 1`.  Repeat as before for
 [SGX](#microbench-keyserver-sgx), using an output file of
-`nsm-exitless-rsa2048.dat`.
+`nsm-exitless-rsa2048.dat` for `benchmark.py`.
 
