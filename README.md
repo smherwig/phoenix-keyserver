@@ -15,7 +15,7 @@ I assume that dependencies are installed under `$HOME`; modify the keyserver's
 Makefiles if this is not the case.
 
 
-Next, download and build the keyserver.
+Download and build the keyserver, `nsmserver`:
 
 ```
 cd ~/src
@@ -24,7 +24,7 @@ cd keyserver/server
 make
 ```
 
-Build and install the nsm OpenSSL engine:
+Build and install the nsm OpenSSL engine, `nsm-engine.so`:
 
 ```
 cd ~/src/keyserver/nsm-engine
