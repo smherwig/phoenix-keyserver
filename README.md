@@ -36,26 +36,30 @@ make install INSTALL_TOP=$HOME
 <a name="packaging"/> Packaging
 ===============================
 
-To package the keyserver to run on Graphene, first follow the stesp to setup
-the [phoenix](https://github.com/smherwig/phoenix) libOS and
-[phoenix-makemanifest](https://github.com/smherwig/phoenix-makemanifest)
-configuration packager.  The instructions here assume that the phoenix source
-is located at `$HOME/src/phoenix` and the phoenix-makemanifest project at
-`$HOME/src/makemanifest`.
+To package the keyserver to run on Graphene, first build the
+[phoenix](https://github.com/smherwig/phoenix#building) libOS and clone the
+[makemanifest](https://github.com/smherwig/phoenix-makemanifest) configuration
+packager.  The instructions here assume that the phoenix source is located at
+`$HOME/src/phoenix` and the makemanifest project at `$HOME/src/makemanifest`.
 
 
 The keyserver can then be packaged with the commands:
 
 ```
 cd ~/src/makemanifest
-./make_sgx.py -g ~/src/phoenix  -k enclave-key.pem -p ~/src/keyserver/deploy/manifest.conf -t $PWD -v -o nsmserver
+./make_sgx.py -g ~/src/phoenix  -k ~/shared/phoenix/enclave-key.pem -p ~/src/keyserver/deploy/manifest.conf -t $PWD -v -o nsmserver
 ```
 
-To run the keyserver, where the private keys are kept in /src
+To run the keyserver, enter:
 
 ```
 ./nsmserver.manifest.sgx -r /srv tcp://127.0.0.1:9000
 ```
+
+This assumes that private keys are kept under the Graphene path `/srv` (which
+`manifest.conf` maps to the host's `$HOME/src/keyserver/server`
+directory)
+
 
 <a name="micro-benchmarks"/> Micro-benchmarks
 =============================================
