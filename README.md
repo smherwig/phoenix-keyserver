@@ -118,7 +118,7 @@ and re-compile:
 
 ```
 make clean; make
-
+```
 
 For nsm-engine, edit `~/src/keyserver/nsm-engine/Makefile`:
 
