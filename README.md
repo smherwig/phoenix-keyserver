@@ -65,13 +65,19 @@ directory)
 =============================================
 
 To evaluate the keyserver's performance, we use the script
-`~/src/keyserver/bench/benchmark.py` to mesaure the number of RSA-2048
+`~/src/keyserver/bench/benchmark.py` to measure the number of RSA-2048
 signatures computed in 10 seconds.
 Under the hood, the  script invokes the `openssl speed` command.  The script
 has options to repeat the test a number of times and compute the 30% trimmed
 mean of all runs.
 
-For all tests, `benchmark.py` runs outside fo an enclave.
+For all tests, `benchmark.py` runs outside fo an enclave.  We benchmark OpenSSL
+
+1.  running without the keyserver (`OpenSSL non-SGX`)
+2.  running with a non-enclave keyserver (`non-SGX`)
+3.  running with a enclaved keyserver (`SGX`)
+4.  running with an enclaved keyserver that makes exitless system calls
+    (`exitless`)
 
 
 OpenSSL non-SGX
@@ -91,7 +97,7 @@ An example `linux-rsa2048.dat` output is:
 where the first column (`1`) is the number of concurrent processes computing
 RSA signatures (`openssl speed`'s `-multi` option), the second column
 (`1597.575000`) the 30% trimmed mean signs per second (here, the average of the
-middle four runs), and `6.347194` the standard devaiton of the middle
+middle four runs), and `6.347194` the standard deviation of the middle
 four runs.
 
 
@@ -99,12 +105,38 @@ Keyserver
 ---------
 
 In order to run the benchmarks on the nsmserver, the nsmserver and nsm-engine
-must both be built with `-DNSM_DO_BENCH` define.  Both `server/Makefile` and
-`nsm-engine/Makefile` have a commented out `CFLAGS` variable with the define
-enabled that may be uncommented, and the regular `CFLAGS` variable instead
-commented out.  The reason for the special compilation is that the `openssl
-speed` hardcodes the key pairs for the RSA test, and the nsmserver and
-nsm-engine must be made aware that this key pair should be used.
+must both be built with the `-DNSM_DO_BENCH` define, and then re-installed.
+
+For nsmserver, edit `~/src/keyserver/server/Makefile`:
+
+```
+CPPFLAGS= $(INCLUDES) -DNSM_DO_BENCH
+#CPPFLAGS= $(INCLUDES)
+```
+
+and re-compile:
+
+```
+make clean; make
+
+
+For nsm-engine, edit `~/src/keyserver/nsm-engine/Makefile`:
+
+```
+CFLAGS = -fPIC -Wall -Werror -I $(HOME)/include -I $(PWD)/../common \
+                  -DNSM_DO_BENCH
+#CFLAGS = -fPIC -Wall -Werror -I $(HOME)/include -I $(PWD)/../common
+```
+
+and re-compile and re-install:
+
+```
+make clean; make; make install INSTALL_TOP=$HOME
+```
+
+The reason for the special compilation is that the `openssl speed` command
+hardcodes the key pairs for the RSA test, and the nsmserver and nsm-engine must
+be made aware that this key pair should be used.
 
 
 ### non-SGX
@@ -125,22 +157,11 @@ cd ~/src/keyserver/bench ./benchmark.py --iterations 10 --trimmed-mean --nsm /ho
 
 ### <a name="microbench-keyserver-sgx"/> SGX
 
-The keyserver's `~/src/keyserver/deploy/manifest.conf` should appear as:
+Ensure that `~/src/keyserver/deploy/manifest.conf` has the directive:
 
 ```
-DEBUG off 
-
-EXEC file:/home/smherwig/src/keyserver/server/nsmserver
-
-MOUNT file:/home/smherwig/src/keyserver/server /srv chroot rw
-MOUNT file:/home/smherwig/src/keyserver/deploy/etc /etc chroot rw
-
-ENCLAVE_SIZE 128 
-
 THREADS 1
 ```
-
-changing the paths as appropriate.
 
 Follow the steps to [package](#packaging) the nsmserver.
 
@@ -151,7 +172,7 @@ cd ~/src/makemanifest/nsmsserver
 ./nsmserver.manifest.sgx tcp://127.0.0.1:9000
 ```
 
-In a second terminal, run the `benchmark.py`:
+In a second terminal, run `benchmark.py`:
 
 ```
 cd ~/src/keyserver/bench
@@ -160,8 +181,11 @@ cd ~/src/keyserver/bench
 
 ### exitless
 
-Ensure that `~/src/keyserver/deploy/manifest.conf` has the line `THREADS 1
-exitless`, rather than `THREADS 1`.  Repeat as before for
-[SGX](#microbench-keyserver-sgx), using an output file of
-`nsm-exitless-rsa2048.dat` for `benchmark.py`.
+Ensure that `~/src/keyserver/deploy/manifest.conf` has the directive:
 
+```
+THREADS 1 exitless
+```
+
+Repeat as before for [SGX](#microbench-keyserver-sgx), using an output file of
+`nsm-exitless-rsa2048.dat` for `benchmark.py`.
