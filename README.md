@@ -151,7 +151,7 @@ cd ~/src/keyserver/server
 In a second terminal, run the `benchmark.py`:
 
 ```
-cd ~/src/keyserver/bench ./benchmark.py --iterations 10 --trimmed-mean --nsm /home/$USER/lib/nsm-engine.so,tcp://127.0.0.1:9000 --output-file nsm-nonsgx-rsa2048.dat
+cd ~/src/keyserver/bench ./benchmark.py --iterations 10 --trimmed-mean --nsm $HOME/lib/nsm-engine.so,tcp://127.0.0.1:9000 --output-file nsm-nonsgx-rsa2048.dat
 ```
 
 
@@ -176,7 +176,7 @@ In a second terminal, run `benchmark.py`:
 
 ```
 cd ~/src/keyserver/bench
-./benchmark.py --iterations 10 --trimmed-mean --nsm /home/$USER/lib/nsm-engine.so,tcp://127.0.0.1:9000 --output-file nsm-sgx-rsa2048.dat
+./benchmark.py --iterations 10 --trimmed-mean --nsm $HOME/lib/nsm-engine.so,tcp://127.0.0.1:9000 --output-file nsm-sgx-rsa2048.dat
 ```
 
 ### exitless
