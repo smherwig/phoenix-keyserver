@@ -47,7 +47,7 @@ The keyserver can then be packaged with the commands:
 
 ```
 cd ~/src/makemanifest
-./make_sgx.py -g ~/src/phoenix  -k ~/shared/phoenix/enclave-key.pem -p ~/src/keyserver/deploy/manifest.conf -t $PWD -v -o nsmserver
+./make_sgx.py -g ~/src/phoenix  -k ~/share/phoenix/enclave-key.pem -p ~/src/keyserver/deploy/manifest.conf -t $PWD -v -o nsmserver
 ```
 
 To run the keyserver, enter:
